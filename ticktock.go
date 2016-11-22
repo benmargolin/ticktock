@@ -116,7 +116,7 @@ func (s *Scheduler) Cancel(name string) {
 	delete(s.jobs, name)
 }
 
-// Starts to schedule the jobs.
+// Starts to schedule the jobs. Blocks indefinitely to run scheduler.
 func (s *Scheduler) Start() {
 	s.started = true
 	for _, j := range s.jobs {
