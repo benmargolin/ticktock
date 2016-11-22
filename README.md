@@ -9,7 +9,7 @@ ticktock is a cron job scheduler that allows you to define and run periodic jobs
 ~~~ go
 // Schedule a job to email reminders once in every 3mins 10 secs.
 ticktock.Schedule("email-reminders", job, &t.When{Each: "3m10s"})
-ticktock.Start()
+ticktock.Start()  // Note: blocks forever to provide scheduler functionality.
 ~~~
 
 ## Usage
@@ -31,6 +31,8 @@ func (j *PrintJob) Run() error {
   return nil
 }
 ~~~
+
+Also note that `ticktock.Start()` blocks indefinitely, you probably want to run it from a goroutine.
 
 ### Scheduling repeated jobs
 
@@ -60,9 +62,9 @@ ticktock.Schedule(
   "print-hello-once", &PrintJob{Msg: "Hello world"}, &t.When{Day: t.Sun, At: "12:00"})
 ~~~
 
-### Automatic retrys
+### Automatic retries
 
-Scheduler provides automatic retry on jobs failures. In order to configure a retry count, schedule the job with additional options, providing a retry count. In the following case, we schedule the print job to be retried 2 times if it fails. (In this sample case, the job will never be retried, because `Run` always returns `nil` though.)
+Scheduler provides automatic retry on jobs failures. In order to configure retry functionality, schedule the job with additional options, providing a retry count. In the following case, we schedule the print job to be retried 2 times if it fails. (In this sample case, the job will never be retried however, because `Run` always returns `nil`.)
 
 ~~~ go
 // Prints "Hello hi" once in every week, on Saturday at 10:00
